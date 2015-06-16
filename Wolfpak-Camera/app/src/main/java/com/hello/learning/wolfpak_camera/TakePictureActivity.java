@@ -1,5 +1,6 @@
 package com.hello.learning.wolfpak_camera;
 
+import java.io.File;
 import java.io.IOException;
 
 import android.app.ActionBar;
@@ -10,7 +11,11 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.Display;
@@ -36,10 +41,13 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
     Canvas canvas;
 
+    int fileName;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fileName = 0;
 
         // fullscreen code
 
@@ -88,10 +96,94 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
+        // First, take the picture on a background thread
+        // Then, start EditPicture activity
+
+        TakePictureAsyncTask task = new TakePictureAsyncTask();
+        task.execute();
+
+        // launch editpicture
         Intent intent = new Intent(this, EditPicture.class);
         startActivity(intent);
 
         return false;
+    }
+
+    private class TakePictureAsyncTask extends AsyncTask <Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+//
+//            //making a folder named picFolder to store pics taken by the camera using this application
+//            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
+//            File newdir = new File(dir);
+//            newdir.mkdirs();
+//
+//            // the name of the pictures will be 1.jpeg, 2.jpeg, and so on
+//            fileName++;
+//
+//            String file = dir + fileName + ".jpg";
+//            File newfile = new File(file);
+//
+//            try {
+//                newfile.createNewFile();
+//            }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Uri outputFileUri = Uri.fromFile(newfile);
+
+            // take the picture
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+     //       cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+
+
+            startActivityForResult(cameraIntent, 0);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            super.onCancelled(aVoid);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if pic was saved properly
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            Log.d("Camera", "Pic saved");
+        }
     }
 
     // extending SurfaceView to render the camera images
