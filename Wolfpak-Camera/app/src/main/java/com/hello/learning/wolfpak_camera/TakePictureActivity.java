@@ -114,6 +114,26 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         @Override
         protected Void doInBackground(Void... params) {
 
+            Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
+                @Override
+                public void onShutter() {
+                    // called as close to picture taking as possible
+                    Log.d("Shutter: ", "Pic is being taken");
+                }
+            };
+
+            Camera.PictureCallback rawPictureCallback = new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] data, Camera camera) {
+
+                }
+            };
+
+            // takes the picture
+
+            mCamera.takePicture(shutterCallback, rawPictureCallback, null, null);
+
+//
 //
 //            //making a folder named picFolder to store pics taken by the camera using this application
 //            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
@@ -134,16 +154,16 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 //            }
 //
 //            Uri outputFileUri = Uri.fromFile(newfile);
-
-            // take the picture
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-     //       cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-
-
-
-            startActivityForResult(cameraIntent, 0);
-
-
+//
+//            // take the picture
+//            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+//
+//
+//
+//            startActivityForResult(cameraIntent, 0);
+//
+//
             return null;
         }
 
