@@ -2,11 +2,15 @@ package com.hello.learning.wolfpak_camera;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.hardware.Camera;
@@ -33,21 +37,25 @@ import android.widget.Toast;
 public class TakePictureActivity extends Activity implements View.OnTouchListener {
 
     private Camera mCamera;
-    private CameraView mView;
+    private CameraView mView; // object that holds the preview of the camera
 
     SurfaceView surfaceView;
     RelativeLayout layout;
     Button takePicture;
 
-    Canvas canvas;
-
+    // DELETE
     int fileName;
+
+    SharedPreferences pictureSharedPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         fileName = 0;
+
+        // init the sharedpreferences
+        pictureSharedPrefs = getSharedPreferences("picture", MODE_PRIVATE);
 
         // fullscreen code
 
@@ -102,11 +110,20 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         TakePictureAsyncTask task = new TakePictureAsyncTask();
         task.execute();
 
-        // launch editpicture
-        Intent intent = new Intent(this, EditPicture.class);
-        startActivity(intent);
 
         return false;
+    }
+
+    public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
+
+        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+        int h = (int) (newHeight * densityMultiplier);
+        int w = (int) (h * photo.getWidth()/((double) photo.getHeight()));
+
+        photo = Bitmap.createScaledBitmap(photo, w, h, true);
+
+        return photo;
     }
 
     private class TakePictureAsyncTask extends AsyncTask <Void, Void, Void> {
@@ -114,24 +131,29 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         @Override
         protected Void doInBackground(Void... params) {
 
-            Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
-                @Override
-                public void onShutter() {
-                    // called as close to picture taking as possible
-                    Log.d("Shutter: ", "Pic is being taken");
-                }
-            };
 
-            Camera.PictureCallback rawPictureCallback = new Camera.PictureCallback() {
+
+            Camera.PictureCallback jpegPictureCallback = new Camera.PictureCallback() {
                 @Override
                 public void onPictureTaken(byte[] data, Camera camera) {
+
+                    // Need to store picture
+                    // Then launch EditPicture
+
+                    Bitmap pictureBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    // To pass data through intents, the bitmap must be scaled down
+                    pictureBitmap = scaleDownBitmap(pictureBitmap, 300, getApplicationContext());
+
+                    Intent intent = new Intent(getApplicationContext(), EditPicture.class);
+                    intent.putExtra("pictureKey,", pictureBitmap); // add the picture data here
+                    startActivity(intent);
 
                 }
             };
 
             // takes the picture
 
-            mCamera.takePicture(shutterCallback, rawPictureCallback, null, null);
+            mCamera.takePicture(null, null, null, jpegPictureCallback);
 
 //
 //

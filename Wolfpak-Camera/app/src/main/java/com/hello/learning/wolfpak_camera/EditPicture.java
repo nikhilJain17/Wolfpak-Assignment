@@ -1,17 +1,39 @@
 package com.hello.learning.wolfpak_camera;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class EditPicture extends Activity {
 
+    Bitmap pictureBitmap;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_picture);
+
+        // Get the picture data
+        Intent intent = new Intent();
+        Bundle transferredData = intent.getExtras();
+        pictureBitmap = (Bitmap) transferredData.get("pictureKey");
+
+        if (pictureBitmap != null) {
+            Log.d("EditPicture: ", "Picture data successfully transferred");
+        }
+
+
+
+
+
+
+
     }
 
 
