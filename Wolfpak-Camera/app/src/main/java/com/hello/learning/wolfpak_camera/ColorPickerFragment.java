@@ -3,6 +3,7 @@ package com.hello.learning.wolfpak_camera;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -44,6 +45,21 @@ public class ColorPickerFragment extends DialogFragment {
         blueSeekBar.setOnSeekBarChangeListener(colorChangedListener);
         greenSeekBar.setOnSeekBarChangeListener(colorChangedListener);
 
+        // button listener to accept color
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // @TODO
+                // transfer the color through a SharedPreferences object here
+
+            }
+        });
+
+        // initialize the tint bar to be reasonably dark
+        // otherwise it is initialized to 0, and the color is white
+        alphaSeekBar.setProgress(66);
+
         return builder.create();
 
     }
@@ -57,9 +73,9 @@ public class ColorPickerFragment extends DialogFragment {
             if (fromUser) {
 
                 // define the ARGB value for the color from the values of the seekbar
-                // note that the seekbar goes from 0 to 254
-                color = Color.argb(alphaSeekBar.getProgress(), redSeekBar.getProgress(),
-                        greenSeekBar.getProgress(), blueSeekBar.getProgress());
+                // the seekbar goes from 0 to 127, and 127 * 2 = 255
+                color = Color.argb(alphaSeekBar.getProgress() * 2, redSeekBar.getProgress() * 2,
+                        greenSeekBar.getProgress() * 2, blueSeekBar.getProgress() * 2);
 
                 colorDialogView.setBackgroundColor(color);
             }

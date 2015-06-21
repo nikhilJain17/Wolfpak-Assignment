@@ -8,10 +8,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alpha"
+        android:text="Tint"
+        android:textSize="11pt"
         android:id="@+id/alphaTextView"
         android:layout_row="0"
-        android:layout_column="0" />
+        android:layout_column="0"
+        android:padding="10dp"/>
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -19,14 +21,15 @@
         android:id="@+id/alphaSeekBar"
         android:layout_row="0"
         android:layout_column="1"
-        android:maxWidth="255dp"
-        android:minWidth="254dp" />
+        android:minWidth="127dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Red"
+        android:textSize="11pt"
         android:id="@+id/redTextView"
+        android:padding="10dp"
         android:layout_row="1"
         android:layout_column="0" />
 
@@ -36,14 +39,16 @@
         android:id="@+id/redSeekBar"
         android:layout_row="1"
         android:layout_column="1"
-        android:minWidth="254dp" />
+        android:minWidth="127dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Blue"
+        android:textSize="11pt"
         android:id="@+id/textView3"
         android:layout_row="2"
+        android:padding="10dp"
         android:layout_column="0" />
 
     <SeekBar
@@ -51,16 +56,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/blueSeekBar"
         android:layout_row="2"
+        android:padding="10dp"
         android:layout_column="1"
-        android:minWidth="254dp" />
+        android:minWidth="127dp" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="11pt"
         android:text="Green"
         android:id="@+id/greenTextView"
         android:layout_row="3"
+        android:padding="10dp"
         android:layout_column="0" />
 
     <SeekBar
@@ -69,7 +77,9 @@
         android:id="@+id/greenSeekBar"
         android:layout_row="3"
         android:layout_column="1"
-        android:minWidth="254dp" />
+        android:minWidth="127dp"
+        android:padding="10dp"
+        android:indeterminate="false" />
 
 
 </GridLayout>
