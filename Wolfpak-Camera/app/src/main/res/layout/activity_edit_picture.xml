@@ -9,14 +9,11 @@
     tools:context="com.hello.learning.wolfpak_camera.EditPicture">
 
 
-    <SurfaceView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/surfaceView"
+        android:id="@+id/picHolder"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
-
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

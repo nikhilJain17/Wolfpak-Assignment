@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -126,6 +127,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         return photo;
     }
 
+    public void setUpEditing (Bitmap bitmap) {
+        setContentView(R.layout.activity_edit_picture);
+
+        ImageView imageView = (ImageView) findViewById(R.id.picHolder);
+        imageView.setImageBitmap(bitmap);
+
+
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private class TakePictureAsyncTask extends AsyncTask <Void, Void, Void> {
 
         @Override
@@ -137,16 +149,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
                 @Override
                 public void onPictureTaken(byte[] data, Camera camera) {
 
-                    // Need to store picture
-                    // Then launch EditPicture
 
                     Bitmap pictureBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    // To pass data through intents, the bitmap must be scaled down
-                    pictureBitmap = scaleDownBitmap(pictureBitmap, 300, getApplicationContext());
+                    setUpEditing(pictureBitmap);
 
-                    Intent intent = new Intent(getApplicationContext(), EditPicture.class);
-                    intent.putExtra("pictureKey,", pictureBitmap); // add the picture data here
-                    startActivity(intent);
+
+                    // To pass data through intents, the bitmap must be scaled down
+//                   pictureBitmap = scaleDownBitmap(pictureBitmap, 50, getApplicationContext());
+//
+//                    Intent intent = new Intent(getApplicationContext(), EditPicture.class);
+//                    intent.putExtra("pictureKey,", pictureBitmap); // add the picture data here
+//                    startActivity(intent);
 
                 }
             };
@@ -154,38 +167,6 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
             // takes the picture
 
             mCamera.takePicture(null, null, null, jpegPictureCallback);
-
-//
-//
-//            //making a folder named picFolder to store pics taken by the camera using this application
-//            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
-//            File newdir = new File(dir);
-//            newdir.mkdirs();
-//
-//            // the name of the pictures will be 1.jpeg, 2.jpeg, and so on
-//            fileName++;
-//
-//            String file = dir + fileName + ".jpg";
-//            File newfile = new File(file);
-//
-//            try {
-//                newfile.createNewFile();
-//            }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            Uri outputFileUri = Uri.fromFile(newfile);
-//
-//            // take the picture
-//            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-//
-//
-//
-//            startActivityForResult(cameraIntent, 0);
-//
-//
             return null;
         }
 
@@ -217,16 +198,7 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // check if pic was saved properly
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            Log.d("Camera", "Pic saved");
-        }
-    }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // extending SurfaceView to render the camera images
     private class CameraView extends SurfaceView implements SurfaceHolder.Callback {
