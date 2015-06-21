@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
@@ -154,9 +155,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 
                     Bitmap pictureBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    // Create a mutable bitmap that can be edited
+                    // Create a rotated bitmap
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
 
-                    setUpEditing(pictureBitmapg);
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(pictureBitmap , 0, 0, pictureBitmap.getWidth(),
+                            pictureBitmap.getHeight(), matrix, true);
+
+
+//                    mutablePicture.setHeight(getWallpaperDesiredMinimumHeight() / 2);
+//                    mutablePicture.setWidth(getWallpaperDesiredMinimumWidth() / 2);
+                    setUpEditing(rotatedBitmap);
 
 
                     // To pass data through intents, the bitmap must be scaled down
