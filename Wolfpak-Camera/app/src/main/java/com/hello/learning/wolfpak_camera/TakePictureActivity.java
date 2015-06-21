@@ -130,8 +130,11 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     public void setUpEditing (Bitmap bitmap) {
         setContentView(R.layout.activity_edit_picture);
 
+
+
         ImageView imageView = (ImageView) findViewById(R.id.picHolder);
         imageView.setImageBitmap(bitmap);
+
 
 
     }
@@ -151,7 +154,9 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 
                     Bitmap pictureBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    setUpEditing(pictureBitmap);
+                    // Create a mutable bitmap that can be edited
+
+                    setUpEditing(pictureBitmapg);
 
 
                     // To pass data through intents, the bitmap must be scaled down
