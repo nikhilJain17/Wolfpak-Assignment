@@ -6,6 +6,7 @@ import java.util.Set;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -127,7 +128,7 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
         return photo;
     }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
     public void setUpEditing (Bitmap bitmap) {
         setContentView(R.layout.activity_edit_picture);
 
@@ -137,6 +138,13 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         imageView.setImageBitmap(bitmap);
 
 
+
+    }
+
+    public void onColorButtonClick (View view) {
+
+        ColorPickerFragment fragment = new ColorPickerFragment();
+        fragment.show(getFragmentManager().beginTransaction(), "");
 
     }
 
