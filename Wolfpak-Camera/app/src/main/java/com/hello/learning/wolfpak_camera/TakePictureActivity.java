@@ -46,6 +46,8 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     RelativeLayout layout;
     Button takePicture;
 
+    int color; // argb value of color to draw with
+
     // DELETE
     int fileName;
 
@@ -129,6 +131,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         return photo;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+    * @TODO
+    * Move this editing stuff into its own class
+    *
+    * Unfortunately, because the binder for transferring the picture is too small,
+    * the editing stuff can't be in its own activity. Even when the picture is compressed.
+    *
+    * = (
+     */
+
+
     public void setUpEditing (Bitmap bitmap) {
         setContentView(R.layout.activity_edit_picture);
 
@@ -147,6 +160,13 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         fragment.show(getFragmentManager().beginTransaction(), "");
 
     }
+
+    public void setColor(int colorArg) {
+        color = colorArg;
+        Log.d("Color: ", Integer.toString(color));
+    }
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

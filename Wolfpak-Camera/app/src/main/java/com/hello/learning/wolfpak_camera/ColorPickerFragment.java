@@ -50,8 +50,8 @@ public class ColorPickerFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                // @TODO
-                // transfer the color through a SharedPreferences object here
+                TakePictureActivity takePictureActivity = new TakePictureActivity();
+                takePictureActivity.setColor(color);
 
             }
         });
