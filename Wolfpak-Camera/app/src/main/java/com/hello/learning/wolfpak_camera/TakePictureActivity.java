@@ -182,21 +182,37 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
     public void onSaveButtonClick (View view) throws Exception {
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        Toast.makeText(this, "Saving picture", Toast.LENGTH_SHORT).show();
+        getOutputMediaFile(1); // 1 = pics, 2 = video
 
 
 
     }
 
+
+    private File getOutputMediaFile(int type){
+
+        File mediaStorageDir = new File(getApplicationContext().getFilesDir(), "Wolfpak Pics");
+
+        if (!mediaStorageDir.mkdir()) {
+            mediaStorageDir.mkdir();
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == 1){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_"+ timeStamp + ".jpg");
+        } else if(type == 2) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
