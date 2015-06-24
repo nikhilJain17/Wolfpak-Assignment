@@ -15,16 +15,29 @@
         android:id="@+id/picHolder"
         android:layout_alignParentStart="true"
         android:scaleType="centerInside"
-        android:layout_below="@+id/button" />
+        android:layout_below="@+id/drawButton"
+        android:layout_above="@+id/saveButton"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Color"
-        android:id="@+id/button"
+        android:text="Draw"
+        android:id="@+id/drawButton"
         android:layout_marginStart="268dp"
         android:onClick="onColorButtonClick" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/saveButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+
     <!--android:scaleType="fitXY"-->
 
 

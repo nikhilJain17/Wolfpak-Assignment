@@ -2,6 +2,8 @@ package com.hello.learning.wolfpak_camera;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import android.app.ActionBar;
@@ -17,10 +19,13 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -112,12 +117,21 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         // First, take the picture on a background thread
         // Then, start EditPicture activity
 
+        // @TODO GET VIDEO WORKING PLS
+        // Picture
         TakePictureAsyncTask task = new TakePictureAsyncTask();
         task.execute();
+//
+
+        // video
+//        TakeVideoAsyncTask task = new TakeVideoAsyncTask();
+//        task.execute();
 
 
         return false;
     }
+
+
 
     public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
 
@@ -164,6 +178,23 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     public void setColor(int colorArg) {
         color = colorArg;
         Log.d("Color: ", Integer.toString(color));
+    }
+
+    public void onSaveButtonClick (View view) throws Exception {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+
+
     }
 
 
@@ -238,6 +269,88 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         }
     }
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private class TakeVideoAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private File getOutputMediaFile(int type){
+            // To be safe, you should check that the SDCard is mounted
+            // using Environment.getExternalStorageState() before doing this.
+
+            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), "MyCameraApp");
+            // This location works best if you want the created images to be shared
+            // between applications and persist after your app has been uninstalled.
+
+            // Create the storage directory if it does not exist
+            if (! mediaStorageDir.exists()){
+                if (! mediaStorageDir.mkdirs()){
+                    Log.d("MyCameraApp", "failed to create directory");
+                    return null;
+                }
+            }
+
+            // Create a media file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File mediaFile;
+            if (type == 1){
+                mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                        "IMG_"+ timeStamp + ".jpg");
+            } else if(type == 2) {
+                mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                        "VID_"+ timeStamp + ".mp4");
+            } else {
+                return null;
+            }
+
+            return mediaFile;
+        }
+
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            mCamera.unlock();
+
+            MediaRecorder mediaRecorder = new MediaRecorder();
+            mediaRecorder.setCamera(mCamera);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
+            mediaRecorder.setOutputFile(getOutputMediaFile(2).toString());
+//            mediaRecorder.setPreviewDisplay(surfaceView);
+
+            try {
+                mediaRecorder.prepare();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mediaRecorder.start();
+
+//            record for 10 seconds
+//            try {
+//                wait(10000);
+//            }
+//            catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mCamera.lock();
+
+
+
+
+            return null;
+        }
+    }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
