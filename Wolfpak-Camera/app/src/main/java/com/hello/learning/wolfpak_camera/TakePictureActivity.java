@@ -30,6 +30,7 @@ import android.provider.MediaStore;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.SurfaceHolder;
@@ -51,22 +52,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     RelativeLayout layout;
     Button takePicture;
 
+    Bitmap pictureTaken; // Global bitmap holding what the user took a pic of
+
     int color; // argb value of color to draw with
 
-    // DELETE
-    int fileName;
-
-    SharedPreferences pictureSharedPrefs;
+    //SharedPreferences pictureSharedPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fileName = 0;
-
-        // init the sharedpreferences
-        pictureSharedPrefs = getSharedPreferences("picture", MODE_PRIVATE);
-
+        
         // fullscreen code
 
         View decorView = getWindow().getDecorView();
@@ -114,20 +110,12 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        // First, take the picture on a background thread
-        // Then, start EditPicture activity
-
-        // @TODO GET VIDEO WORKING PLS
         // Picture
         TakePictureAsyncTask task = new TakePictureAsyncTask();
         task.execute();
 
 
-
-        // Start EditPicture Activity
-        Intent intent = new Intent(this, EditPicture.class);
-        startActivity(intent);
-
+        // @TODO GET VIDEO WORKING PLS
 //        // video
 //        TakeVideoAsyncTask task = new TakeVideoAsyncTask();
 //        task.execute();
@@ -152,6 +140,7 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
      */
 
 
+    // Display the image taken on the screen
     public void setUpEditing (Bitmap bitmap) {
         setContentView(R.layout.activity_edit_picture);
 
@@ -164,12 +153,14 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
     }
 
+    // if the color button is clicked
     public void onColorButtonClick (View view) {
 
         ColorPickerFragment fragment = new ColorPickerFragment();
         fragment.show(getFragmentManager().beginTransaction(), "");
 
     }
+
 
     public void setColor(int colorArg) {
         color = colorArg;
@@ -178,37 +169,32 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
     public void onSaveButtonClick (View view) throws Exception {
 
-        Toast.makeText(this, "Saving picture", Toast.LENGTH_SHORT).show();
-        getOutputMediaFile(1); // 1 = pics, 2 = video
 
+
+       // @TODO Implement Save Button click pls
+
+       // Name of picture file is "Wolfpak" along with the date
+        String name = "Wolfpak" + System.currentTimeMillis() + ".jpg";
+
+        // Store it in the device's gallery
+        String location = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), pictureTaken, name, "Wolfpak");
+
+        // Was the picture saved successfully?
+        if (location != null) {
+            // Yes
+            Toast.makeText(this, "Picture saved successfully", Toast.LENGTH_SHORT).show();
+
+        }
+
+        else {
+            // No
+            Toast.makeText(this, "Error saving", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
 
-
-    private File getOutputMediaFile(int type){
-
-        File mediaStorageDir = new File(getApplicationContext().getFilesDir(), "Wolfpak Pics");
-
-        if (!mediaStorageDir.mkdir()) {
-            mediaStorageDir.mkdir();
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        if (type == 1){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-        } else if(type == 2) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
-    }
+    // End EDITING "CLASS"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +220,8 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
                     Bitmap rotatedBitmap = Bitmap.createBitmap(pictureBitmap , 0, 0, pictureBitmap.getWidth(),
                             pictureBitmap.getHeight(), matrix, true);
+
+                    pictureTaken = rotatedBitmap;
 
                     setUpEditing(rotatedBitmap);
 
