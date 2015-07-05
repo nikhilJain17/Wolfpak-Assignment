@@ -62,7 +62,7 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        
+
         // fullscreen code
 
         View decorView = getWindow().getDecorView();
