@@ -19,16 +19,6 @@ public class EditPicture extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_picture);
 
-        // Get the picture data
-        Intent intent = new Intent();
-        Bundle transferredData = intent.getExtras();
-        pictureBitmap = (Bitmap) transferredData.get("pictureKey");
-
-        if (pictureBitmap != null) {
-            Log.d("EditPicture: ", "Picture data successfully transferred");
-        }
-
-
 
 
 

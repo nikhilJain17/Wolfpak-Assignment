@@ -121,9 +121,14 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         // Picture
         TakePictureAsyncTask task = new TakePictureAsyncTask();
         task.execute();
-//
 
-        // video
+
+
+        // Start EditPicture Activity
+        Intent intent = new Intent(this, EditPicture.class);
+        startActivity(intent);
+
+//        // video
 //        TakeVideoAsyncTask task = new TakeVideoAsyncTask();
 //        task.execute();
 
@@ -132,26 +137,17 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     }
 
 
-
-    public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
-
-        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
-
-        int h = (int) (newHeight * densityMultiplier);
-        int w = (int) (h * photo.getWidth()/((double) photo.getHeight()));
-
-        photo = Bitmap.createScaledBitmap(photo, w, h, true);
-
-        return photo;
-    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // PICTURE EDITING SCREEN
+
     /*
     * @TODO
     * Move this editing stuff into its own class
     *
     * Unfortunately, because the binder for transferring the picture is too small,
     * the editing stuff can't be in its own activity. Even when the picture is compressed.
-    *
+    *   It has to be thumbnail size
     * = (
      */
 
@@ -217,6 +213,8 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // TAKE PICTURE CLASS
+
     private class TakePictureAsyncTask extends AsyncTask <Void, Void, Void> {
 
         @Override
@@ -237,18 +235,7 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
                     Bitmap rotatedBitmap = Bitmap.createBitmap(pictureBitmap , 0, 0, pictureBitmap.getWidth(),
                             pictureBitmap.getHeight(), matrix, true);
 
-
-//                    mutablePicture.setHeight(getWallpaperDesiredMinimumHeight() / 2);
-//                    mutablePicture.setWidth(getWallpaperDesiredMinimumWidth() / 2);
                     setUpEditing(rotatedBitmap);
-
-
-                    // To pass data through intents, the bitmap must be scaled down
-//                   pictureBitmap = scaleDownBitmap(pictureBitmap, 50, getApplicationContext());
-//
-//                    Intent intent = new Intent(getApplicationContext(), EditPicture.class);
-//                    intent.putExtra("pictureKey,", pictureBitmap); // add the picture data here
-//                    startActivity(intent);
 
                 }
             };
@@ -288,6 +275,8 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // TAKE VIDEO CLASS
 
 
     private class TakeVideoAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -370,6 +359,8 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // CUSTOM VIEW TO SHOW CAMERA
 
     // extending SurfaceView to render the camera images
     private class CameraView extends SurfaceView implements SurfaceHolder.Callback {
