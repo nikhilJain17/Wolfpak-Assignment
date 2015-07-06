@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.renderscript.RenderScript;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.Display;
@@ -140,6 +141,9 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
      */
 
 
+
+
+
     // Display the image taken on the screen
     public void setUpEditing (Bitmap bitmap) {
         setContentView(R.layout.activity_edit_picture);
@@ -159,6 +163,10 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
         ColorPickerFragment fragment = new ColorPickerFragment();
         fragment.show(getFragmentManager().beginTransaction(), "");
 
+        DrawingOnCanvas drawingOnCanvas = new DrawingOnCanvas(this);
+        Canvas canvas = new Canvas(pictureTaken);
+        drawingOnCanvas.onDraw(canvas);
+
     }
 
 
@@ -168,7 +176,6 @@ public class TakePictureActivity extends Activity implements View.OnTouchListene
     }
 
     public void onSaveButtonClick (View view) throws Exception {
-
 
 
        // @TODO Implement Save Button click pls
